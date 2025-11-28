@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Apply — Srivaari Capital</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><div class="logo">S</div><div><div style="font-weight:800">Srivaari Capital</div><div style="font-size:13px;color:var(--muted)">Trusted Personal Finance</div></div></div>
+      <nav class="nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a href="apply.html">Apply</a><a href="contact.html">Contact</a></nav>
+    </header>
+
+    <section class="section card">
+      <h2>Apply for Loan</h2>
+      <p class="small">Complete this quick form — we will contact you. You can also apply via WhatsApp.</p>
+
+      <form id="loanForm">
+        <div class="form-row">
+          <div>
+            <label>Full name<input name="name" required /></label>
+          </div>
+          <div>
+            <label>Phone (WhatsApp)<input name="phone" required placeholder="919876543210" /></label>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>Email (optional)<input name="email" type="email" /></label>
+        </div>
+
+        <div style="margin-top:12px" class="form-row">
+          <div>
+            <label>Loan amount (₹)<input name="loan_amount" type="number" required /></label>
+          </div>
+          <div>
+            <label>Tenure (months)<input name="tenure" type="number" required /></label>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>Purpose<textarea name="purpose"></textarea></label>
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:10px">
+          <button type="button" id="sendMail" class="btn btn-primary">Send Application by Email</button>
+          <a id="waLink" href="https://wa.me/919876543210" target="_blank" class="btn btn-outline">Apply via WhatsApp</a>
+        </div>
+
+        <div id="result" style="margin-top:12px;color:var(--muted)"></div>
+      </form>
+    </section>
+
+    <footer class="footer">© <span id="yr4"></span> Srivaari Capital</footer>
+  </div>
+
+  <script>
+    document.getElementById('yr4').textContent=new Date().getFullYear();
+    // email target
+    const EMAIL_TO = 'srivaari.capital@gmail.com';
+
+    document.getElementById('sendMail').addEventListener('click', function(){
+      const form = document.getElementById('loanForm');
+      const data = new FormData(form);
+      const name = data.get('name') || '';
+      const phone = data.get('phone') || '';
+      const email = data.get('email') || '';
+      const amount = data.get('loan_amount') || '';
+      const tenure = data.get('tenure') || '';
+      const purpose = data.get('purpose') || '';
+
+      if(!name || !phone || !amount){
+        document.getElementById('result').textContent = 'Please fill Name, Phone and Loan amount.';
+        return;
+      }
+
+      const subject = encodeURIComponent('Loan application from ' + name);
+      let body = '';
+      body += 'Name: ' + name + '%0A';
+      body += 'Phone: ' + phone + '%0A';
+      if(email) body += 'Email: ' + email + '%0A';
+      body += 'Loan Amount: ₹' + amount + '%0A';
+      body += 'Tenure (months): ' + tenure + '%0A';
+      body += 'Purpose: ' + encodeURIComponent(purpose) + '%0A%0A';
+      body += 'Please contact the applicant.';
+
+      // open mail client
+      const mailto = `mailto:${EMAIL_TO}?subject=${subject}&body=${body}`;
+      window.location.href = mailto;
+    });
+
+    // update WhatsApp link to include a prefilled message (optional)
+    const waBtn = document.getElementById('waLink');
+    waBtn.addEventListener('click', function(){
+      const form = document.getElementById('loanForm');
+      const data = new FormData(form);
+      const name = data.get('name') || '';
+      const phone = data.get('phone') || '';
+      const amount = data.get('loan_amount') || '';
+      const msg = encodeURIComponent(`Hi, I am ${name}. I want a loan of ₹${amount}. Phone: ${phone}`);
+      waBtn.href = 'https://wa.me/919876543210?text=' + msg;
+    });
+  </script>
+</body>
+</html>
