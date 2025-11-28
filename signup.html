@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Signup — Srivaari Capital</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><div class="logo">S</div><div><div style="font-weight:800">Srivaari Capital</div><div style="font-size:13px;color:var(--muted)">Trusted Personal Finance</div></div></div>
+      <nav class="nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a href="apply.html">Apply</a><a href="contact.html">Contact</a></nav>
+    </header>
+
+    <section class="section card">
+      <h2>Create account</h2>
+      <form id="signupForm">
+        <label>Full name<input name="name" /></label>
+        <label>Phone (WhatsApp) <input name="phone" required placeholder="919876543210" /></label>
+        <label>Email <input name="email" type="email" required /></label>
+        <label>Password <input name="password" type="password" required /></label>
+
+        <div style="margin-top:12px;display:flex;gap:10px">
+          <button type="submit" class="btn btn-primary">Create account</button>
+          <a href="login.html" class="btn btn-outline">Already have account?</a>
+        </div>
+
+        <div id="msg" style="margin-top:12px;color:var(--muted)"></div>
+      </form>
+    </section>
+
+    <footer class="footer">© <span id="yr1"></span> Srivaari Capital</footer>
+  </div>
+
+  <script>
+    document.getElementById('yr1').textContent = new Date().getFullYear();
+
+    // Replace this with your Render backend URL after deployment:
+    const BACKEND = 'BACKEND_URL_HERE';
+
+    document.getElementById('signupForm').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const f = ev.target;
+      const payload = {
+        name: f.name.value.trim(),
+        phone: f.phone.value.trim(),
+        email: f.email.value.trim(),
+        password: f.password.value
+      };
+      document.getElementById('msg').textContent = 'Creating account...';
+      try {
+        const res = await fetch(BACKEND + '/api/signup', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          credentials: 'include',
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (res.ok && json.success) {
+          document.getElementById('msg').textContent = 'Account created — you are now logged in. Redirecting to Apply...';
+          setTimeout(()=> location.href = 'apply.html', 1100);
+        } else {
+          document.getElementById('msg').textContent = json.error || 'Signup failed';
+        }
+      } catch (err) {
+        document.getElementById('msg').textContent = 'Network error';
+      }
+    });
+  </script>
+</body>
+</html>
