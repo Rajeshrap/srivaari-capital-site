@@ -1,11 +1,101 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <title>Srivaari Capital</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Srivaari Capital — Trusted Personal Loans</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body style="font-family:Arial; padding:20px;">
-  <h1>Srivaari Capital</h1>
-  <p>Welcome to our official website.</p>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div class="logo">S</div>
+        <div>
+          <div style="font-weight:800">Srivaari Capital</div>
+          <div style="font-size:13px;color:var(--muted)">Trusted Personal Finance</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="apply.html">Apply</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1>Fast, transparent personal loans — simple EMIs, clear terms</h1>
+        <p class="lead">Srivaari Capital helps you get small & mid-size loans quickly with minimal paperwork, low processing fee and friendly support. Apply by WhatsApp or email — no hidden charges.</p>
+
+        <div class="cta-row">
+          <a href="apply.html" class="btn btn-primary">Apply Now</a>
+          <a href="contact.html" class="btn btn-outline">Contact Us</a>
+        </div>
+
+        <div class="section">
+          <h3 style="margin:0 0 10px 0">Why choose us</h3>
+          <div class="grid">
+            <div class="service"><h3>Quick approval</h3><p class="small">Simple documents & fast verification for timely payouts.</p></div>
+            <div class="service"><h3>Clear EMIs</h3><p class="small">Transparent interest with EMI schedule and calculator.</p></div>
+            <div class="service"><h3>Low fees</h3><p class="small">Competitive processing fee, no hidden charges.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="card">
+        <h3 style="margin-top:0">EMI Calculator</h3>
+        <div style="margin-top:8px">
+          <label>Loan Amount (₹)<input id="calcP" type="number" value="50000" /></label>
+          <label>Annual Interest (%)<input id="calcR" type="number" value="12" step="0.01" /></label>
+          <label>Tenure (months)<input id="calcN" type="number" value="12" /></label>
+
+          <div style="margin-top:12px">
+            <button id="calcBtn" class="btn btn-primary">Calculate</button>
+          </div>
+
+          <div style="margin-top:12px">
+            <div>Monthly EMI: <strong id="emiOut">—</strong></div>
+            <div>Total Payment: <strong id="totalOut">—</strong></div>
+            <div>Total Interest: <strong id="interestOut">—</strong></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      © <span id="yr"></span> Srivaari Capital · WhatsApp: <a href="https://wa.me/919876543210" style="color:var(--accent)">+91 98765 43210</a> · Email: <a href="mailto:srivaari.capital@gmail.com" style="color:var(--accent)">srivaari.capital@gmail.com</a>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+    function calculateEMI(P, annualRatePercent, months){
+      const r=(annualRatePercent/100)/12;
+      const n=months;
+      if(r===0){return {emi:P/n,total:P,interest:0}}
+      const x=Math.pow(1+r,n);
+      const emi=(P*r*x)/(x-1);
+      const total=emi*n;
+      const interest=total-P;
+      return {emi,total,interest};
+    }
+    function fmt(x){ return new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(Math.round(x)); }
+
+    document.getElementById('calcBtn').addEventListener('click',()=>{
+      const P=Number(document.getElementById('calcP').value)||0;
+      const r=Number(document.getElementById('calcR').value)||0;
+      const n=Number(document.getElementById('calcN').value)||0;
+      if(P<=0||n<=0){ alert('Enter amount and tenure'); return; }
+      const res=calculateEMI(P,r,n);
+      document.getElementById('emiOut').textContent = fmt(res.emi);
+      document.getElementById('totalOut').textContent = fmt(res.total);
+      document.getElementById('interestOut').textContent = fmt(res.interest);
+    });
+  </script>
 </body>
 </html>
+
